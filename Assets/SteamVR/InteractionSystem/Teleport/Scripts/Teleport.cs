@@ -836,8 +836,8 @@ namespace Valve.VR.InteractionSystem
 				Teleport.ChangeScene.Send( currentFadeTime );
 			}
 
-			SteamVR_Fade.Start( Color.clear, 0 );
-			SteamVR_Fade.Start( Color.black, currentFadeTime );
+			//SteamVR_Fade.Start( Color.clear, 0 );
+			//SteamVR_Fade.Start( Color.black, currentFadeTime );
 
 			headAudioSource.transform.SetParent( player.hmdTransform );
 			headAudioSource.transform.localPosition = Vector3.zero;
@@ -888,14 +888,28 @@ namespace Valve.VR.InteractionSystem
 			if ( teleportingToMarker.ShouldMovePlayer() )
 			{
 				Vector3 playerFeetOffset = player.trackingOriginTransform.position - player.feetPositionGuess;
-				player.trackingOriginTransform.position = teleportPosition + playerFeetOffset;
+				//player.trackingOriginTransform.position = teleportPosition + playerFeetOffset;
+				StartCoroutine(DashTeleportToPoint(teleportPosition + playerFeetOffset));
 			}
 			else
 			{
-				teleportingToMarker.TeleportPlayer( pointedAtPosition );
+				//teleportingToMarker.TeleportPlayer( pointedAtPosition );
+				StartCoroutine(DashTeleportToPoint(pointedAtPosition));
 			}
 
 			Teleport.Player.Send( pointedAtTeleportMarker );
+		}
+
+		IEnumerator DashTeleportToPoint(Vector3 target)
+		{
+			float speed = 45f;
+			while((player.trackingOriginTransform.position - target).magnitude > 1f)
+			{
+				player.trackingOriginTransform.Translate(Time.deltaTime * speed * (target - player.trackingOriginTransform.position).normalized);
+				yield return null;
+			}
+			player.trackingOriginTransform.position = target;
+			yield return null;
 		}
 
 

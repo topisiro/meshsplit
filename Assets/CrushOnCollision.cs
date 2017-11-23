@@ -66,7 +66,7 @@ public class CrushOnCollision : MonoBehaviour {
 			else
 			{
 				collider.enabled = true;
-				Time.timeScale = Mathf.Clamp(0.2f* (transform.position - previousPosition).magnitude / Time.unscaledDeltaTime, Time.timeScale - maxTimeScaleChangePerFrame, Time.timeScale + maxTimeScaleChangePerFrame);
+				Time.timeScale = Mathf.Clamp(0.2f * (transform.position - previousPosition).magnitude / Time.unscaledDeltaTime, Time.timeScale - maxTimeScaleChangePerFrame, Time.timeScale + maxTimeScaleChangePerFrame);
 				Time.timeScale = Mathf.Clamp(Time.timeScale, 0.0025f, 3f);
 				Time.fixedDeltaTime = Time.timeScale < 1 ? 0.0111111f * Time.timeScale : 0.011f;
 			}
@@ -80,6 +80,8 @@ public class CrushOnCollision : MonoBehaviour {
 				Time.fixedDeltaTime = 0.0111111f;
 			}
 		}
+		else
+			collider.enabled = true;
 
 		previousPosition = transform.position;
 	}
